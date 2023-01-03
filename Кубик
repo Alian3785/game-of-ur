@@ -1,0 +1,4 @@
+import random
+lst = [1, 2, 3, 4]
+weights = [10, 10, 10, 70]
+random.choices(lst, weights=weights, k=1)
