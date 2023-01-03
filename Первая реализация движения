@@ -1,0 +1,27 @@
+import random
+lst = [0, 1, 2, 3, 4]
+weights = [6.25, 25, 37.5, 25, 6.25]
+roll = random.choices(lst, weights=weights, k=1)
+player1 = 3
+player2 = 3
+field = [
+    {'index': 0, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 1, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 2, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 3, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 4, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 5, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 6, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 7, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 8, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 9, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 10, 'rozette': 0, 'ball1': 0, 'ball2': 0}
+    ]
+position = 0
+while position <= 10: 
+    roll = random.choices(lst, weights=weights, k=1)
+    roll = roll[0]
+    position = position + roll
+    print(position)
+    if (position > 10):
+      print("endd")
