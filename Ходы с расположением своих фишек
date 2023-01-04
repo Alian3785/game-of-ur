@@ -1,0 +1,50 @@
+import random
+lst = [0, 1, 2, 3, 4]
+weights = [6.25, 25, 37.5, 25, 6.25]
+roll = random.choices(lst, weights=weights, k=1)
+player1 = 3
+player2 = 3
+field = [
+    {'index': 0, 'rozette': 0, 'ball1': 3, 'ball2': 3},
+    {'index': 1, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 2, 'rozette': 0, 'ball1': 1, 'ball2': 0},
+    {'index': 3, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 4, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 5, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 6, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 7, 'rozette': 0, 'ball1': 0, 'ball2': 0},
+    {'index': 8, 'rozette': 0, 'ball1': 1, 'ball2': 0},
+    {'index': 9, 'rozette': 1, 'ball1': 0, 'ball2': 0},
+    {'index': 10, 'rozette': 0, 'ball1': 0, 'ball2': 0}
+    ]
+
+balcycle1 = 0
+balcycle2 = 0
+#while field[10]["ball1"] != 3 or field[10]["ball1"] != 3: 
+roll = random.choices(lst, weights=weights, k=1)
+roll = roll[0]
+arrplayer1 = []
+while balcycle1 < 10:
+   ballnow = field[balcycle1]["ball1"]
+   ballindex = field[balcycle1]["index"]
+#расположение фишек игрока 1
+   if ballnow != 0:  
+     arrplayer1.append(ballindex)    
+   balcycle1 += 1
+
+print(arrplayer1) 
+
+balcycle1 = 0
+
+while balcycle1 < 10:
+  ballnow = field[balcycle1]["ball1"]
+  ballindex = field[balcycle1]["index"]
+#расположение фишек игрока 1
+  if ballnow != 0:  
+    ballfuture = ballindex + roll
+    if ballfuture <= 10:
+     if ballfuture not in arrplayer1:
+       print("Выпала" , roll)
+       print("текущая позиция" , ballindex)
+       print("возможная позиция" , ballfuture)   
+  balcycle1 += 1
