@@ -1,0 +1,33 @@
+# Test the trained agent
+iii=0
+iiia = []
+while iii < 50:
+ obs = env.reset()
+ n_steps = 80
+ for step in range(n_steps):
+   action, _ = model.predict(obs, deterministic=True)
+   print("Step {}".format(step + 1))
+   print("Action: ", action)
+   obs, reward, done, info = env.step(action)
+   print('obs=', obs, 'reward=', reward, 'done=', done)
+   env.render(mode='console')
+   if done:
+    # Note that the VecEnv resets automatically
+    # when a done signal is encountered
+     print("Goal reached!", "reward=", reward)
+     iiia.append(reward[0])
+     break
+ iii += 1 
+print(iiia)
+win = []
+notwin = []
+for iiiaa in iiia:
+  if iiiaa < 0:
+    notwin.append(iiiaa)
+  elif iiiaa > 0:
+    win.append(iiiaa)
+print(win)
+print(notwin)
+print(len(win))
+print(len(notwin))
+  
