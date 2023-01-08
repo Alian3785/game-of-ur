@@ -1,0 +1,227 @@
+import numpy as np
+import gym
+from gym import spaces
+import random
+
+
+class GoLeftEnv(gym.Env):
+  """
+  Custom Environment that follows gym interface.
+  This is a simple env where the agent must learn to go always left. 
+  """
+  # Because of google colab, we cannot implement the GUI ('human' render mode)
+  metadata = {'render.modes': ['console']}
+  # Define constants for clearer code
+  FIRST = 0
+  SECOND = 1
+  THIRD = 2
+  FORTH = 3
+  FIFTH= 4
+  SIXTH = 5
+  SEVENTH = 6
+
+  def __init__(self, grid_size=10):
+    super(GoLeftEnv, self).__init__()
+
+    self.fields = [[0, 0, 7, 7,], [1, 0, 0, 0,], [2, 0, 0, 0,], [3, 0, 0, 0,], [4, 0, 0, 0,], [5, 0, 0, 0], [6, 0, 0, 0], [7, 0, 0, 0], [8, 0, 0, 0], [9, 0, 0, 0], [10, 0, 0, 0], [11, 0, 0, 0], [12, 0, 0, 0], 
+                   [13, 0, 0, 0], [14, 0, 0, 0], [15, 0, 0, 0], [16, 0, 0, 0], [0, 0, 0, 0]]
+
+    # Define action and observation space
+    # They must be gym.spaces objects
+    # Example when using discrete actions, we have two: left and right
+    n_actions = 6
+    self.action_space = spaces.Discrete(n_actions)
+    # The observation will be the coordinate of the agent
+    # this can be described both by Discrete and Box space
+    self.observation_space = spaces.Box(low=-100, high=100,
+                                        shape=(18,4), dtype=np.float32)
+
+  def reset(self):
+    """
+    Important: the observation must be a numpy array
+    :return: (np.array) 
+    """
+
+    # Initialize the agent at the right of the grid
+    self.fields = [[0, 0, 7, 7,], [1, 0, 0, 0,], [2, 0, 0, 0,], [3, 0, 0, 0,], [4, 0, 0, 0,], [5, 0, 0, 0], [6, 0, 0, 0], [7, 0, 0, 0], [8, 0, 0, 0], [9, 0, 0, 0], [10, 0, 0, 0], [11, 0, 0, 0], [12, 0, 0, 0], 
+                   [13, 0, 0, 0], [14, 0, 0, 0], [15, 0, 0, 0], [16, 0, 0, 0], [0, 0, 0, 0]]
+
+    # here we convert to float32 to make it more general (in case we want to use continuous actions)
+    return np.array([self.fields]).astype(np.float32)
+
+  def step(self, action):
+
+     def first():
+            numberforcycles = 16
+    
+            balcycle1 = 0
+            lst = [0, 1, 2, 3, 4]
+            weights = [6.25, 25, 37.5, 25, 6.25]
+            roll = random.choices(lst, weights=weights, k=1)
+            roll = roll[0]
+            self.fields[17][0] = roll
+            #print("Выпала" , roll)
+            arrplayer1 = []
+            while balcycle1 < numberforcycles:
+              ballnow = self.fields[balcycle1][2]
+              ballindex = self.fields[balcycle1][0]
+          #расположение фишек игрока 1
+              if ballnow != 0:  
+               arrplayer1.append(ballindex)
+              balcycle1 += 1
+            if self.fields[8][3] == 1:
+                arrplayer1.append(8)
+            #print(arrplayer1) 
+
+            balcycle1 = 0
+            arrchoice1 = []
+            while balcycle1 < numberforcycles:
+              ballnow = self.fields[balcycle1][2]
+              ballindex = self.fields[balcycle1][0]
+              if ballnow != 0:  
+                ballfuture = ballindex + roll
+                if ballfuture <= numberforcycles:
+                 if ballfuture not in arrplayer1:
+                  arrchoice1.append(ballfuture)
+              # print("Выпала" , self.roll)
+                  #print("текущая позиция" , ballindex)
+                  #print("возможная позиция" , ballfuture)   
+              balcycle1 += 1
+
+            #print(arrchoice1)
+            if arrchoice1:
+              playeronemove = len(arrchoice1)
+              playeronemove = arrchoice1[playeronemove-1]
+              #playeronemove = random.choice(arrchoice1)
+              playeronepos = playeronemove - roll
+              #print(playeronepos)
+              self.fields[playeronepos][2] = self.fields[playeronepos][2] - 1
+              self.fields[playeronemove][2] = self.fields[playeronemove][2] + 1
+              if self.fields[playeronemove][3] == 1 and playeronemove >= 5 and playeronemove <= 12:
+                self.fields[playeronemove][3] = 0
+                self.fields[0][3] = self.fields[0][3] + 1
+                #print("мы забрали шашку на" , self.fields[playeronemove][0])
+              #print(self.fields)
+
+
+     first()
+
+     def second():
+            numberforcycles = 16
+            lst = [0, 1, 2, 3, 4]
+            weights = [6.25, 25, 37.5, 25, 6.25]
+            agentroll = random.choices(lst, weights=weights, k=1)
+            agentroll = agentroll[0]
+            self.fields[17][1] = agentroll
+            #print("Агенту Выпал" , agentroll)
+
+            agentcycle = 0
+            arrplayeragent = []
+
+            while agentcycle < numberforcycles:
+              agentballnow = self.fields[agentcycle][3]
+              agentballindex = self.fields[agentcycle][0]
+          #расположение фишек игрока 2
+              if agentballnow != 0:  
+               arrplayeragent.append(agentballindex)    
+              agentcycle += 1
+            if self.fields[8][2] == 1:
+                arrplayeragent.append(8)
+
+            #print("фишки агента", arrplayeragent) 
+
+            agentcycle = 0
+            arrplayeragent2 = []
+
+            while agentcycle < numberforcycles:
+              agentballnow = self.fields[agentcycle][3]
+              agentballindex = self.fields[agentcycle][0]
+          #будущее фишек игрока 2
+              if agentballnow != 0:  
+               agentballfuture = agentballindex + agentroll  
+               if agentballfuture <= numberforcycles:
+                if agentballfuture not in arrplayeragent:
+                  arrplayeragent2.append(agentballfuture) 
+              agentcycle += 1
+            
+            #print(arrplayeragent2)
+
+            if arrplayeragent2:
+
+              if action == self.FIRST:
+                if len(arrplayeragent2) > 0:
+                 playeragentmove = arrplayeragent2[0]
+                else:
+                 playeragentmove = arrplayeragent2[0]
+              elif action == self.SECOND:
+               if len(arrplayeragent2) > 1:
+                playeragentmove = arrplayeragent2[1]
+               else:
+                playeragentmove = arrplayeragent2[0]
+              elif action == self.THIRD:
+               if len(arrplayeragent2) > 2:
+                playeragentmove = arrplayeragent2[2]
+               else:
+                playeragentmove = arrplayeragent2[0]
+              elif action == self.FORTH:
+               if len(arrplayeragent2) > 3:
+                playeragentmove = arrplayeragent2[3]
+               else:
+                playeragentmove = arrplayeragent2[0]
+              elif action == self.FIFTH:
+               if len(arrplayeragent2) > 4:
+                playeragentmove = arrplayeragent2[4]
+               else:
+                playeragentmove = arrplayeragent2[0]
+              elif action == self.SIXTH:
+               if len(arrplayeragent2) > 5:
+                playeragentmove = arrplayeragent2[5]
+               else:
+                playeragentmove = arrplayeragent2[0]
+              elif action == self.SEVENTH:
+               if len(arrplayeragent2) > 6:
+                playeragentmove = arrplayeragent2[6]
+               else:
+                playeragentmove = arrplayeragent2[0] 
+              else:
+                raise ValueError("Received invalid action={} which is not part of the action space".format(action))
+
+              #print("Агент делает выбор", playeragentmove)
+
+              #playeragentmove = random.choice(arrplayeragent)
+              playeragentpos = playeragentmove - agentroll
+              self.fields[playeragentpos][3] = self.fields[playeragentpos][3] - 1
+              self.fields[playeragentmove][3] = self.fields[playeragentmove][3] + 1
+              if self.fields[playeragentmove][2] == 1 and playeragentmove >= 5 and playeragentmove <= 12:
+                self.fields[playeragentmove][2] = 0
+                self.fields[0][2] = self.fields[0][2] + 1
+                #print("Агент забрал шашку на" , self.fields[playeragentmove][0])
+
+            else:
+              rrr=0#print("Выпал 0 и агент не делает выбора")
+     second()
+
+    # Are we at the left of the grid?
+     done = bool(self.fields[16][2] >= 7 or self.fields[16][3] >= 7)
+
+    # Null reward everywhere except when reaching the goal (left of the grid)
+
+     reward = self.fields[16][3] 
+
+
+
+    # Optionally we can pass additional info, we are not using that for now
+     info = {}
+
+     return np.array([self.fields]).astype(np.float32), reward, done, info
+
+
+  def render(self, mode='console'):
+    if mode != 'console':
+      raise NotImplementedError()
+    # agent is represented as a cross, rest as a dot
+
+    #print(self.fields[0])
+
+  def close(self):
+    pass
