@@ -1,0 +1,61 @@
+iii=0
+iiia = []
+while iii < 1:
+ env = GoLeftEnv()
+ obs = env.reset()
+ n_steps = 200
+ for _ in range(n_steps):
+    # Random action
+     action = env.action_space.sample()
+     print("Action: ", action)
+     obs, reward, done, info = env.step(action)
+     print('obs=', obs, 'reward=', reward, 'done=', done)
+     print("observation space shape:", env.observation_space.shape)
+     print(obs[0])
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+     print(u" " " " u"\u25A1" " " " ")
+     print(u" " " " u"\u25A1" " " " ")
+     print(u"\U0001F7E5")
+     
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+     print(u"\u25A1" " " u"\u25A1" " " u"\u25A1")
+
+     env.render(mode='console')
+     if (done == 1):
+       print("Goal reached!", "reward=", reward)
+       iiia.append(reward)
+       break
+ iii += 1 
+print(iiia)
+win = []
+notwin = []
+for iiiaa in iiia:
+  if iiiaa <= 0:
+    notwin.append(iiiaa)
+  elif iiiaa > 0:
+    win.append(iiiaa)
+print(win)
+print(notwin)
+print(len(win))
+print(len(notwin))
+# sample action:
+print("sample action:", env.action_space.sample())
+
+# observation space shape:
+print("observation space shape:", env.observation_space.shape)
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+
+print(u"\u2B1B" u"\u2B1C" u"\u2B1B") 
+print(u"\u2B1B" u"\u2B1C" u"\u2B1B")
+
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+print(u"\u2B1C" u"\u2B1C" u"\u2B1C")
+
+# sample observation:
+print("sample observation:", env.observation_space.sample())
