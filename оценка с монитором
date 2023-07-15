@@ -1,0 +1,9 @@
+from stable_baselines3.common.evaluation import evaluate_policy
+from stable_baselines3.common.monitor import Monitor
+log_dir = "tmp/"
+env = Monitor(env, log_dir)
+#evaluate_policy(model, env, n_eval_episodes=1000)
+#run.finish()
+mean_reward, std_reward = evaluate_policy(model, env, n_eval_episodes=100, deterministic=True)
+
+print(f"mean_reward={mean_reward:.2f} +/- {std_reward}")
