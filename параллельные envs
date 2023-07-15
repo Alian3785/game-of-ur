@@ -1,0 +1,41 @@
+from stable_baselines3 import PPO, A2C, DQN
+from stable_baselines3.common.env_util import make_vec_env
+
+# Instantiate the env
+vec_env = make_vec_env(GoLeftEnv, n_envs=4, env_kwargs=dict(grid_size=10))
+
+
+# Train the agent
+from stable_baselines3.common.env_util import make_vec_env
+
+# Instantiate the env
+env = GoLeftEnv(grid_size=10)
+# wrap it
+env = make_vec_env(GoLeftEnv, n_envs=4, env_kwargs=dict(grid_size=10))
+
+# Train the agent
+
+
+config = {
+    "policy": 'MlpPolicy',
+    "total_timesteps": 3000000
+}
+
+wandb.init(
+    config=config,
+    sync_tensorboard=True,  # automatically upload SB3's tensorboard metrics to W&B
+    project="urforall",
+    save_code=True,
+)
+
+model = PPO(config['policy'], env, verbose=1, tensorboard_log=f"runs/pponew")
+model.learn(
+    total_timesteps=config["total_timesteps"],
+    callback=WandbCallback(
+        gradient_save_freq=100,
+        model_save_path=f"models/{1234}",
+        verbose=2,
+    ),
+)
+
+wandb.finish()
