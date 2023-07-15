@@ -1,0 +1,115 @@
+env = GoLeftEnv(grid_size=10)
+obs, info = env.reset()
+n_steps = 100
+for _ in range(n_steps):
+    # Random action
+    action = env.action_space.sample()
+    obs, reward, terminated, truncated, info = env.step(action)
+    print("Action: ", action)
+    print('obs=', obs, 'reward=', reward, 'done=', done)
+    print("observation space shape:", env.observation_space.shape)
+    if obs[4][2] == 1:
+        print(u"\U0001F7E5", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[5][2] == 1:
+        print(u"\U0001F7E5", end="")
+    elif obs[5][3] == 1:
+        print(u"\U0001F7E6", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[4][3] == 1:
+        print(u"\U0001F7E6")
+    else:
+        print(u"\u2B1C")
+    if obs[3][2] == 1:
+        print(u"\U0001F7E5", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[6][2] == 1:
+        print(u"\U0001F7E5", end="")
+    elif obs[6][3] == 1:
+        print(u"\U0001F7E6", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[3][3] == 1:
+        print(u"\U0001F7E6")
+    else:
+        print(u"\u2B1C")
+    if obs[2][2] == 1:
+        print(u"\U0001F7E5", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[7][2] == 1:
+        print(u"\U0001F7E5", end="")
+    elif obs[7][3] == 1:
+        print(u"\U0001F7E6", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[2][3] == 1:
+        print(u"\U0001F7E6")
+    else:
+        print(u"\u2B1C")
+    if obs[1][2] == 1:
+        print(u"\U0001F7E5", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[8][2] == 1:
+        print(u"\U0001F7E5", end="")
+    elif obs[8][3] == 1:
+        print(u"\U0001F7E6", end="")
+    else:
+        print(u"\u2B1C", end="")
+    if obs[1][3] == 1:
+        print(u"\U0001F7E6")
+    else:
+        print(u"\u2B1C")
+    print(u"\u2B1B", end="")
+    if obs[9][2] == 1:
+       print(u"\U0001F7E5", end="")
+    elif obs[9][3] == 1:
+       print(u"\U0001F7E6", end="")
+    else:
+       print(u"\u2B1C", end="")
+    print(u"\u2B1B")
+    print(u"\u2B1B", end="")
+    if obs[10][2] == 1:
+       print(u"\U0001F7E5", end="")
+    elif obs[10][3] == 1:
+       print(u"\U0001F7E6", end="")
+    else:
+       print(u"\u2B1C", end="")
+    print(u"\u2B1B")
+    if obs[14][2] == 1:
+       print(u"\U0001F7E5", end="")
+    else:
+       print(u"\u2B1C", end="")
+    if obs[11][2] == 1:
+       print(u"\U0001F7E5", end="")
+    elif obs[11][3] == 1:
+       print(u"\U0001F7E6", end="")
+    else:
+       print(u"\u2B1C", end="")
+    if obs[14][3] == 1:
+       print(u"\U0001F7E6")
+    else:
+       print(u"\u2B1C")
+    if obs[13][2] == 1:
+       print(u"\U0001F7E5", end="")
+    else:
+       print(u"\u2B1C", end="")
+    if obs[12][2] == 1:
+       print(u"\U0001F7E5", end="")
+    elif obs[12][3] == 1:
+       print(u"\U0001F7E6", end="")
+    else:
+       print(u"\u2B1C", end="")
+    if obs[13][3] == 1:
+       print(u"\U0001F7E6")
+    else:
+       print(u"\u2B1C")
+    if terminated:
+        # Note that the VecEnv resets automatically
+        # when a done signal is encountered
+        print("Goal reached!", "reward=", reward)
+        break
