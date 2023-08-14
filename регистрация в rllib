@@ -1,0 +1,4 @@
+from ray import tune
+
+# Register , how your env should be constructed (always with 5, or you can take values from the `config` EnvContext object):
+tune.register_env("my_env", lambda config: GoLeftEnv())
