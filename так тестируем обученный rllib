@@ -1,0 +1,32 @@
+try:
+    import gymnasium as gym
+    gymnasium = True
+except Exception:
+    import gym
+
+    gymnasium = False
+
+from ray.rllib.algorithms.ppo import PPOConfig
+
+env_name = "my_env"
+env = GoLeftEnv()
+algo = PPOConfig().environment(env_name).rollouts(num_rollout_workers=1).build()
+iii = 0
+while iii<100:
+  iii = iii+1 
+  episode_reward = 0
+  terminated = truncated = False
+
+  if gymnasium:
+      obs, info = env.reset()
+  else:
+      obs = env.reset()
+
+  while not terminated and not truncated:
+      action = algo.compute_single_action(obs)
+      if gymnasium:
+          obs, reward, terminated, truncated, info = env.step(action)
+      else:
+          obs, reward, terminated, info = env.step(action)
+      episode_reward += reward
+  print(episode_reward)   
