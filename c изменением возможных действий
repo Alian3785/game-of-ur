@@ -1,0 +1,174 @@
+# Copyright 2023 The Pgx Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import jax
+import jax.numpy as jnp
+
+import pgx.core as core
+from pgx._src.struct import dataclass
+from pgx._src.types import Array, PRNGKey
+from jax import random
+
+
+
+
+FALSE = jnp.bool_(False)
+TRUE = jnp.bool_(True)
+
+
+@dataclass
+class State(core.State):
+    current_player: Array = jnp.int32(0)
+    observation: Array = jnp.zeros((8, 1, 2), dtype=jnp.bool_)
+    rewards: Array = jnp.float32([0.0, 0.0])
+    terminated: Array = FALSE
+    truncated: Array = FALSE
+    legal_action_mask: Array = jnp.ones(8, dtype=jnp.bool_)
+    _step_count: Array = jnp.int32(0)
+    # --- Tic-tac-toe specific ---
+    _turn: Array = jnp.int32(0)
+    # 0 1 2
+    # 3 4 5
+    # 6 7 8
+    _board: Array = -jnp.ones(8, jnp.int32)  # -1 (empty), 0, 1
+
+    @property
+    def env_id(self) -> core.EnvId:
+        return "tic_tac_toe"
+
+
+class TicTacToe(core.Env):
+    def __init__(self):
+        super().__init__()
+
+    def _init(self, key: PRNGKey) -> State:
+        return _init(key)
+
+    def _step(self, state: core.State, action: Array, key) -> State:
+        del key
+        assert isinstance(state, State)
+        return _step(state, action)
+
+    def _observe(self, state: core.State, player_id: Array) -> Array:
+        assert isinstance(state, State)
+        return _observe(state, player_id)
+
+    @property
+    def id(self) -> core.EnvId:
+        return "tic_tac_toe"
+
+    @property
+    def version(self) -> str:
+        return "v0"
+
+    @property
+    def num_players(self) -> int:
+        return 2
+
+
+def _init(rng: PRNGKey) -> State:
+    current_player = jnp.int32(jax.random.bernoulli(rng))
+    return State(current_player=current_player)  # type:ignore
+
+def true_fun(_):
+    return jnp.array([1, 1, 1, 1, -1, -1, -1, -1])
+
+def false_fun(_):
+    return jnp.array([-1, -1, -1, -1, 1, 1, 1, 1])
+
+
+def _step(state: State, action: Array) -> State:
+    #state = state.replace(_board=state._board.at[action].set(state._turn))  # type: ignore
+    #state = state.replace(_board=state._board.at[0].set(state._board.at[0]+1))
+
+#randomness which does not work
+
+    key = random.PRNGKey(0)
+
+    key, subkey = random.split(key)
+    random.uniform(subkey)
+
+    array = jnp.array([0, 1, 2, 3, 4])
+    weights = jnp.array([0.0625, 0.25, 0.375, 0.25, 0.0625])
+
+    sample = jax.random.choice(subkey, array, p=weights)
+
+    state = state.replace(_board=state._board.at[action].add(-sample)) 
+    state = state.replace(_board=state._board.at[action].add(-sample)) 
+    sosososo = jax.lax.cond(state.current_player == 1, true_fun, false_fun, None)
+
+    #try to correct the legal_action_mask
+
+    sosososo = sosososo.at[7].add(-2)
+
+    
+# Define the value you're looking for
+
+         
+    won = _win_check(state._board, state._turn)
+    reward = jax.lax.cond(
+        won,
+        lambda: jnp.float32([-1, -1]).at[state.current_player].set(1),
+        lambda: jnp.zeros(2, jnp.float32),
+    )
+    return state.replace(  # type: ignore
+        current_player=(state.current_player + 1) % 2,    
+        legal_action_mask=sosososo > 0,
+        #legal_action_mask=[True, False, True, True],
+        rewards=reward,
+        terminated=won,
+        _turn=(state._turn + 1) % 2,
+    )
+
+
+def _win_check(board, turn) -> Array:   
+    first_four_less_than_10 = jnp.all(board[:4] < -10)
+    last_four_less_than_10 = jnp.all(board[-4:] < -10)
+    return jnp.logical_or(first_four_less_than_10, last_four_less_than_10)
+
+
+def _observe(state: State, player_id: Array) -> Array:
+    @jax.vmap
+    def plane(i):
+        return (state._board == i).reshape((8, 1))
+
+    # flip if player_id is opposite
+    x = jax.lax.cond(
+        state.current_player == player_id,
+        lambda: jnp.int32([state._turn, 1 - state._turn]),
+        lambda: jnp.int32([1 - state._turn, state._turn]),
+    )
+
+    return jnp.stack(plane(x), -1)
+
+animal = State()
+
+#key = random.PRNGKey(0)
+
+#key, subkey = random.split(key)
+#random.uniform(subkey)
+
+#array = jnp.array([0, 1, 2, 3, 4])
+#weights = jnp.array([0.0625, 0.25, 0.375, 0.25, 0.0625])
+
+#sample = jax.random.choice(subkey, array, p=weights)
+
+#print(sample)
+
+#print(animal.legal_action_mask)
+#print(animal._board)
+
+#print(animal.current_player)
+#print(animal._turn)
+#print(animal._board[0]+1)
